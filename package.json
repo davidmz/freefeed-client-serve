@@ -1,0 +1,27 @@
+{
+  "name": "freefeed-client-serve",
+  "packageManager": "yarn@3.6.0",
+  "type": "module",
+  "scripts": {
+    "start": "node ./src/index.js",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@babel/core": "~7.22.5",
+    "@babel/eslint-parser": "~7.22.5",
+    "eslint": "~8.42.0",
+    "eslint-config-prettier": "~8.8.0",
+    "eslint-plugin-prettier": "~4.2.1",
+    "eslint-plugin-simple-import-sort": "~10.0.0",
+    "eslint-plugin-unused-imports": "~2.0.0",
+    "prettier": "~2.8.8"
+  },
+  "dependencies": {
+    "dotenv": "~16.1.4",
+    "koa": "~2.14.2",
+    "koa-conditional-get": "~3.0.0",
+    "koa-mount": "~4.0.0",
+    "koa-send": "~5.0.1",
+    "koa-static": "~5.0.0"
+  }
+}
