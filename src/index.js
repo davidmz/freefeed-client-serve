@@ -22,7 +22,7 @@ if (!webRoot) {
 
 if (!(port > 0 && port < 65536)) {
   // eslint-disable-next-line no-console
-  console.error("Invalid port value: " + process.env["PORT"]);
+  console.error(`Invalid port value: ${process.env["PORT"]}`);
   process.exit(1);
 }
 

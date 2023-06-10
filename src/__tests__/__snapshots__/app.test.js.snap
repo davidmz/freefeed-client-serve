@@ -1,0 +1,55 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`App > should return '/' with replaced placeholders 1`] = `
+"<html>
+  <p><script>window.CONFIG_PATCH = {\\"hello\\":\\"world\\"};</script></p>
+  <p></p>
+  <p></p>
+</html>
+"
+`;
+
+exports[`App > should return known post of johnsnow with replaced placeholders 1`] = `
+"<html>
+  <p><script>window.CONFIG_PATCH = {\\"hello\\":\\"world\\"};</script></p>
+  <p>OpenGraph for [00000000-0000-0000-0000-000000000123]</p>
+  <p>Metatags for @johnsnow</p>
+</html>
+"
+`;
+
+exports[`App > should return known post of lunalovegood with replaced placeholders 1`] = `
+"<html>
+  <p><script>window.CONFIG_PATCH = {\\"hello\\":\\"world\\"};</script></p>
+  <p>OpenGraph for [00000000-0000-0000-0000-000000000123]</p>
+  <p></p>
+</html>
+"
+`;
+
+exports[`App > should return some arbitrary page 1`] = `
+"<html>
+  <p><script>window.CONFIG_PATCH = {\\"hello\\":\\"world\\"};</script></p>
+  <p></p>
+  <p></p>
+</html>
+"
+`;
+
+exports[`App > should return unknown post of johnsnow with replaced placeholders 1`] = `
+"<html>
+  <p><script>window.CONFIG_PATCH = {\\"hello\\":\\"world\\"};</script></p>
+  <p></p>
+  <p>Metatags for @johnsnow</p>
+</html>
+"
+`;
+
+exports[`App > should return unknown post of lunalovegood with replaced placeholders 1`] = `
+"<html>
+  <p><script>window.CONFIG_PATCH = {\\"hello\\":\\"world\\"};</script></p>
+  <p></p>
+  <p></p>
+</html>
+"
+`;

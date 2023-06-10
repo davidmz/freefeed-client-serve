@@ -25,6 +25,7 @@
         "argsIgnorePattern": "^_"
       }
     ],
+    "prefer-template": "error",
     "prettier/prettier": "error"
   }
 }

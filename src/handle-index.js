@@ -34,13 +34,13 @@ export function handleIndex(webRoot, configPath, apiRoot) {
     ctx.set("Cache-Control", "no-cache");
     ctx.body = indexContent
       .replace(
-        `<!--FREEFEED_CUSTOM_CONFIG-->`,
+        /<!--\s*FREEFEED_CUSTOM_CONFIG\s*-->/,
         `<script>window.CONFIG_PATCH = ${JSON.stringify(
           customConfig
         )};</script>`
       )
-      .replace(`<!--FREEFEED_POSTS_OPENGRAPH-->`, postOpenGraph)
-      .replace(`<!--FREEFEED_TIMELINE_METATAGS-->`, timelineMetaTags);
+      .replace(/<!--\s*FREEFEED_POSTS_OPENGRAPH\s*-->/, postOpenGraph)
+      .replace(/<!--\s*FREEFEED_TIMELINE_METATAGS\s*-->/, timelineMetaTags);
   };
 }
 
