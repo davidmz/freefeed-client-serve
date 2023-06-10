@@ -1,5 +1,6 @@
 import { readFile } from "fs/promises";
 import { createServer } from "http";
+import fetch from "node-fetch";
 import { join } from "path";
 import { promisify } from "util";
 import { beforeAll, describe, expect, it } from "vitest";

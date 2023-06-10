@@ -1,4 +1,5 @@
 import { readFile } from "fs/promises";
+import fetch from "node-fetch";
 import { join } from "path";
 
 /**
