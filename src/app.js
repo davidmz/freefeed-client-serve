@@ -15,10 +15,11 @@ import {
  */
 export function createApp(webRoot, configPath, apiRoot) {
   const app = new Koa();
-  app.use(conditionalGet());
-  app.use(etag());
-  app.use(allowedMethodsHandler());
-  app.use(staticHandler(webRoot));
-  app.use(indexHandler(webRoot, configPath, apiRoot));
+  app
+    .use(conditionalGet())
+    .use(etag())
+    .use(allowedMethodsHandler())
+    .use(staticHandler(webRoot))
+    .use(indexHandler(webRoot, configPath, apiRoot));
   return app;
 }

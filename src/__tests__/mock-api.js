@@ -1,4 +1,4 @@
-import { bunch, createRouter, param, route } from "@davidmz/just-router";
+import Router from "@koa/router";
 import { createServer } from "http";
 import Koa from "koa";
 import { promisify } from "util";
@@ -21,28 +21,19 @@ export async function createMockAPI() {
 }
 
 function createMockApp() {
-  const app = new Koa();
+  const router = new Router()
+    .get("/v2/posts-opengraph/:postId", (ctx) => {
+      ctx.body =
+        ctx.params["postId"] === knownPostId
+          ? `OpenGraph for [${ctx.params["postId"]}]`
+          : "";
+    })
+    .get("/v2/timelines-metatags/:username", (ctx) => {
+      ctx.body =
+        ctx.params["username"] === knownUsername
+          ? `Metatags for @${ctx.params["username"]}`
+          : "";
+    });
 
-  /** @type {import("@davidmz/just-router").Router<(c: Koa.Context) => void>}*/
-  const router = createRouter(
-    route(
-      "v2",
-      bunch(
-        route("posts-opengraph", param("postId"), (rc) => (ctx) => {
-          ctx.body = "";
-          if (rc.pathParams["postId"] === knownPostId) {
-            ctx.body = `OpenGraph for [${rc.pathParams["postId"]}]`;
-          }
-        }),
-        route("timelines-metatags", param("username"), (rc) => (ctx) => {
-          ctx.body = "";
-          if (rc.pathParams["username"] === knownUsername) {
-            ctx.body = `Metatags for @${rc.pathParams["username"]}`;
-          }
-        })
-      )
-    )
-  );
-  app.use((ctx) => router(ctx.path)(ctx));
-  return app;
+  return new Koa().use(router.routes()).use(router.allowedMethods());
 }
