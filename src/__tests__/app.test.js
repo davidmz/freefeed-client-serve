@@ -48,16 +48,21 @@ describe("App", () => {
 
   /**
    * @param {string} path
-   * @param {{[k: string]: string}} headers
+   * @param {{ [k: string]: string }} headers
+   * @param {{ method?: string, noBody?: boolean }} options
    */
-  async function expectResource(path, headers) {
-    const res = await fetch(rootURL + path);
+  async function expectResource(
+    path,
+    headers,
+    { method = "GET", noBody = false } = {}
+  ) {
+    const res = await fetch(rootURL + path, { method });
     expect(res.ok).toBe(true);
     for (const k in headers) {
       expect(res.headers.get(k)).toBe(headers[k]);
     }
     const [fileContent, responseContent] = await Promise.all([
-      readFile(join(webRoot, path), "utf8"),
+      noBody ? "" : readFile(join(webRoot, path), "utf8"),
       res.text(),
     ]);
     expect(responseContent).toBe(fileContent);
@@ -68,6 +73,25 @@ describe("App", () => {
       "Content-Type": "application/javascript; charset=utf-8",
       "Cache-Control": "max-age=31536000, immutable",
     }));
+
+  it("should return HEAD for asset", () =>
+    expectResource(
+      "/assets/some-script.js",
+      {
+        "Content-Type": "application/javascript; charset=utf-8",
+        "Cache-Control": "max-age=31536000, immutable",
+      },
+      { method: "HEAD", noBody: true }
+    ));
+
+  it("should not allow other HTTP methods", async () => {
+    const res = await fetch(`${rootURL}/assets/some-script.js`, {
+      method: "PUT",
+    });
+    expect(res.status).toBe(405);
+    expect(res.statusText).toBe("Method Not Allowed");
+    expect(res.headers.get("Allow")).toBe("GET, HEAD");
+  });
 
   it("should return non-cacheable asset", () =>
     expectResource("/assets/js/bookmarklet-popup.js", {

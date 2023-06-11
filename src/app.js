@@ -18,6 +18,17 @@ export function createApp(webRoot, configPath, apiRoot) {
 
   const app = new Koa();
   app.use(conditionalGet());
+  app.use(async (ctx, next) => {
+    if (ctx.method === "GET") {
+      await next();
+    } else if (ctx.method === "HEAD") {
+      await next();
+      ctx.body = "";
+    } else {
+      ctx.status = 405;
+      ctx.set("Allow", "GET, HEAD");
+    }
+  });
   app.use(etag());
   app.use((ctx) => router(ctx.path)(ctx));
   return app;
