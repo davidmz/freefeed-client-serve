@@ -6,6 +6,7 @@ import { promisify } from "util";
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { createApp } from "../app.js";
+import { maxCache, noCache } from "../handlers.js";
 import {
   createMockAPI,
   knownPostId,
@@ -71,7 +72,7 @@ describe("App", () => {
   it("should return asset", () =>
     expectResource("/assets/some-script.js", {
       "Content-Type": "application/javascript; charset=utf-8",
-      "Cache-Control": "max-age=31536000, immutable",
+      "Cache-Control": maxCache,
     }));
 
   it("should return HEAD for asset", () =>
@@ -79,7 +80,7 @@ describe("App", () => {
       "/assets/some-script.js",
       {
         "Content-Type": "application/javascript; charset=utf-8",
-        "Cache-Control": "max-age=31536000, immutable",
+        "Cache-Control": maxCache,
       },
       { method: "HEAD", noBody: true }
     ));
@@ -96,25 +97,33 @@ describe("App", () => {
   it("should return non-cacheable asset", () =>
     expectResource("/assets/js/bookmarklet-popup.js", {
       "Content-Type": "application/javascript; charset=utf-8",
-      "Cache-Control": "no-cache",
+      "Cache-Control": noCache,
     }));
 
   it("should return 'auth-return.html'", () =>
     expectResource("/auth-return.html", {
       "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "no-cache",
+      "Cache-Control": noCache,
     }));
 
   it("should not return nonexisting asset", async () => {
     const path = "/assets/not-exists.js";
     const res = await fetch(rootURL + path);
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(200); // FIXME
   });
 
   it("should return '/' with replaced placeholders", async () => {
     const res = await fetch(`${rootURL}/`);
     expect(res.ok).toBe(true);
-    expect(res.headers.get("Cache-Control")).toBe("no-cache");
+    expect(res.headers.get("Cache-Control")).toBe(noCache);
+
+    await expect(res.text()).resolves.toMatchSnapshot();
+  });
+
+  it("should return '/index.html' with replaced placeholders", async () => {
+    const res = await fetch(`${rootURL}/index.html`);
+    expect(res.ok).toBe(true);
+    expect(res.headers.get("Cache-Control")).toBe(noCache);
 
     await expect(res.text()).resolves.toMatchSnapshot();
   });

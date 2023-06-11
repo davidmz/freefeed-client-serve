@@ -9,6 +9,15 @@ exports[`App > should return '/' with replaced placeholders 1`] = `
 "
 `;
 
+exports[`App > should return '/index.html' with replaced placeholders 1`] = `
+"<html>
+  <p><script>window.CONFIG_PATCH = {\\"hello\\":\\"world\\"};</script></p>
+  <p></p>
+  <p></p>
+</html>
+"
+`;
+
 exports[`App > should return known post of johnsnow with replaced placeholders 1`] = `
 "<html>
   <p><script>window.CONFIG_PATCH = {\\"hello\\":\\"world\\"};</script></p>
