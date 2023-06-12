@@ -1,3 +1,4 @@
+import { ReadStream } from "fs";
 import { readFile } from "fs/promises";
 import send from "koa-send";
 import { join } from "path";
@@ -80,7 +81,10 @@ export function indexHandler(webRoot, configPath, apiRoot) {
   return async (ctx) => {
     // Now dealing with 'index.html'
     const [indexContent, customConfig] = await Promise.all([
-      readFile(join(webRoot, "index.html"), "utf8"),
+      // 'send' can already read index.html into stream
+      ctx.body instanceof ReadStream
+        ? readStream(ctx.body)
+        : readFile(join(webRoot, "index.html"), "utf8"),
       readFile(configPath, "utf8").then(
         (data) => JSON.parse(data),
         (err) => {
@@ -99,7 +103,7 @@ export function indexHandler(webRoot, configPath, apiRoot) {
     ]);
 
     ctx.status = 200;
-    ctx.set("Content-Type", "text/html; charset=utf8");
+    ctx.set("Content-Type", "text/html; charset=utf-8");
     ctx.set("Cache-Control", noCache);
     ctx.body = indexContent
       .replace(
@@ -111,4 +115,19 @@ export function indexHandler(webRoot, configPath, apiRoot) {
       .replace(/<!--\s*FREEFEED_POSTS_OPENGRAPH\s*-->/, postOpenGraph)
       .replace(/<!--\s*FREEFEED_TIMELINE_METATAGS\s*-->/, timelineMetaTags);
   };
+}
+
+/**
+ * @see https://stackoverflow.com/a/63361543
+ * @param {import("stream").Readable} stream
+ * @returns {Promise<string>}
+ */
+async function readStream(stream) {
+  const chunks = [];
+
+  for await (const chunk of stream) {
+    chunks.push(Buffer.from(chunk));
+  }
+
+  return Buffer.concat(chunks).toString("utf-8");
 }
